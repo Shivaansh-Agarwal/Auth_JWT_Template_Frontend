@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/auth.context.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Cart = () => {
+  const navigate = useNavigate();
   const { token } = useAuth();
   console.log(token);
   useEffect(() => {
-    login(token);
+    login(token, navigate);
   }, []);
   return (
     <div>
@@ -15,7 +17,7 @@ export const Cart = () => {
   );
 };
 
-async function login(token) {
+async function login(token, navigate) {
   try {
     const { data } = await axios.get(
       "https://auth-101.shivaansh98.repl.co/user",
@@ -26,7 +28,10 @@ async function login(token) {
       }
     );
     console.log(data);
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(`Token is not correct, navigating to Login, LOGS:`);
+    if (error.response.status === 401) {
+      navigate("/login");
+    }
   }
 }

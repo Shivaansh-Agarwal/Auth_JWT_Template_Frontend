@@ -6,7 +6,7 @@ import { useAuth } from "./contexts/auth.context.jsx";
 import "./styles.css";
 
 export default function App() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isUserLoggedIn, logout } = useAuth();
   return (
     <div className="App">
       <nav>
@@ -23,7 +23,7 @@ export default function App() {
         onClick={() => {
           logout();
         }}
-        disabled={!isLoggedIn}
+        disabled={!isUserLoggedIn}
       >
         Logout
       </button>

@@ -1,25 +1,24 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { fakeAuthApi } from "../fakeAuthApi.js";
 
 const AuthContext = createContext(null);
 
 const AuthProvider = function ({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState(null);
+  const { isLoggedIn, token: savedToken } = JSON.parse(
+    localStorage.getItem("login")
+  ) || {
+    isLoggedIn: false,
+    token: null
+  };
 
-  useEffect(() => {
-    let loginStatus = JSON.parse(localStorage.getItem("login"));
-    if (loginStatus?.isLoggedIn) {
-      setIsLoggedIn(true);
-      setToken(loginStatus.token);
-    }
-  }, []);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(isLoggedIn);
+  const [token, setToken] = useState(savedToken);
 
   async function login(username, password) {
     try {
       const response = await fakeAuthApi(username, password);
       if (response.success) {
-        setIsLoggedIn(true);
+        setIsUserLoggedIn(true);
         setToken(response.token);
         localStorage.setItem(
           "login",
@@ -36,12 +35,12 @@ const AuthProvider = function ({ children }) {
     if (localStorage?.getItem("login")) {
       localStorage.removeItem("login");
     }
-    setIsLoggedIn(false);
+    setIsUserLoggedIn(false);
     setToken(null);
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>
+    <AuthContext.Provider value={{ isUserLoggedIn, login, logout, token }}>
       {children}
     </AuthContext.Provider>
   );
