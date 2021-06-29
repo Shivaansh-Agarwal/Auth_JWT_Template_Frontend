@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { fakeAuthApi } from "../fakeAuthApi.js";
+import axios from "axios";
 
 const AuthContext = createContext(null);
 
@@ -16,13 +16,20 @@ const AuthProvider = function ({ children }) {
 
   async function login(username, password) {
     try {
-      const response = await fakeAuthApi(username, password);
-      if (response.success) {
+      const { data } = await axios.post(
+        "https://auth-101.shivaansh98.repl.co/login",
+        {
+          username: username,
+          password: password
+        }
+      );
+      console.log(data);
+      if (data.success) {
         setIsUserLoggedIn(true);
-        setToken(response.token);
+        setToken(data.token);
         localStorage.setItem(
           "login",
-          JSON.stringify({ isLoggedIn: true, token: response.token })
+          JSON.stringify({ isLoggedIn: true, token: data.token })
         );
       }
     } catch (e) {
