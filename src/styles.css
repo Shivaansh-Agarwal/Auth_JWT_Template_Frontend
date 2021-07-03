@@ -9,3 +9,15 @@ a {
 nav {
   margin-bottom: 0.5rem;
 }
+
+.login-username,
+.login-password {
+  display: flex;
+  justify-content: space-between;
+  width: 35%;
+  margin: 0.2rem;
+}
+
+button {
+  cursor: pointer;
+}
