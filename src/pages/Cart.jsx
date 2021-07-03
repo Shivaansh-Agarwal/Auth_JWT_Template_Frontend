@@ -8,8 +8,8 @@ export const Cart = () => {
   const { token } = useAuth();
   console.log(token);
   useEffect(() => {
-    login(token, navigate);
-  }, []);
+    fetchUsers(token, navigate);
+  }, [navigate, token]);
   return (
     <div>
       <h2>This is Cart</h2>
@@ -17,7 +17,7 @@ export const Cart = () => {
   );
 };
 
-async function login(token, navigate) {
+async function fetchUsers(token, navigate) {
   try {
     const { data } = await axios.get(
       "https://auth-101.shivaansh98.repl.co/user",

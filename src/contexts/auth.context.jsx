@@ -13,6 +13,7 @@ const AuthProvider = function ({ children }) {
 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(isLoggedIn);
   const [token, setToken] = useState(savedToken);
+  const [isLoginCallSuccess, setIsLoginCallSuccess] = useState(null);
 
   async function login(username, password) {
     try {
@@ -32,8 +33,12 @@ const AuthProvider = function ({ children }) {
           JSON.stringify({ isLoggedIn: true, token: data.token })
         );
       }
+      setIsLoginCallSuccess(true);
+      return true;
     } catch (e) {
-      console.error("Wrong Username and Password", e);
+      console.error("Invalid Username or Password", e);
+      setIsLoginCallSuccess(false);
+      return false;
     }
   }
 
@@ -47,7 +52,16 @@ const AuthProvider = function ({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isUserLoggedIn, login, logout, token }}>
+    <AuthContext.Provider
+      value={{
+        isUserLoggedIn,
+        login,
+        logout,
+        token,
+        isLoginCallSuccess,
+        setIsLoginCallSuccess
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
